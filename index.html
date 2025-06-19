@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- ∨×××× [수정 금지] ××××∨ -->
+    <title></title>
+    <!-- ∧×××× [수정 금지] ××××∧ -->
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      as="style"
+      crossorigin
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"
+    />
+    <link rel="stylesheet" href="./common/p5template/p5template.css" />
+
+    <script src="./common/p5template/responsive.js"></script>
+    <script src="./common/p5template/scroll.js"></script>
+    <script src="./common/p5template/title.js"></script>
+    <script src="./common/p5template/references.js"></script>
+    <script src="./common/p5template/paging.js"></script>
+    <script>
+      new P5Template.Scroll();
+
+      // ∨○○○○ [수정 필수] ○○○○∨
+      // 작품 제목, 본인 성명, 작품 공개 연도
+      new P5Template.Title('거울 위의 흔적', '최예진', '2025');
+      // 참고자료 목록
+      const references = [
+        {
+          title: 'Pose detection with ml5.js and Handpose',
+          authors: ['Department of Musicology, University of Oslo'],
+          year: '2024',
+          publisher: 'Creative Computing Hub Oslo',
+          url: 'https://www.hf.uio.no/imv/english/research/networks/creative-computing-hub-oslo/pages/c2ho-workshops/ml5-js-part-4.html',
+          // 손가락 마디 트래킹, landmark 배열 활용
+        },
+        {
+          title: 'ml5.js: Handpose',
+          authors: ['Pippin Barr'],
+          year: '2023',
+          publisher: 'CART263 - Pippin Barr',
+          url: 'http://pippinbarr.com/cart263/topics/ai/ml5js-handpose.html',
+          // Handpose 모델의 예측값을 기반으로 실시간 인터랙션(닦기 등) 구현 방식을 참조
+        },
+        {
+          title: '4.1: Particle System Simulation - The Nature of Code',
+          authors: ['Daniel Shiffman'],
+          year: '2021',
+          publisher: 'The Coding Train - YouTube',
+          url: 'https://www.youtube.com/watch?v=syR0klfncCk',
+          // 파티클(물방울) 시스템, 중력 적용, 파티클 이동 및 화면 밖 삭제 로직을 참조
+        },
+        {
+          title: 'p5.js Coding Tutorial | Basics of Particle Systems',
+          authors: ['Pattvira'],
+          year: '2024',
+          publisher: 'YouTube',
+          url: 'https://www.youtube.com/watch?v=QlpadcXok8U',
+          // p5.js에서 파티클 배열 관리, 랜덤 속성 부여, 애니메이션 구조를 참조
+        },
+        {
+          title: 'Understanding Transformations in p5.js',
+          authors: ['Cratecode'],
+          year: '2023',
+          publisher: 'Cratecode',
+          url: 'https://cratecode.com/info/p5js-transformations',
+          // 영상 좌우반전, 반전된 좌표계에서의 위치 보정 방법을 참조
+        },
+      ];
+      // ∧○○○○ [수정 필수] ○○○○∧
+
+      new P5Template.References(references);
+      new P5Template.Paging();
+    </script>
+
+    <!-- ∨○○○○ [수정 필수] ○○○○∨ -->
+    <!-- p5.js 라이브러리 로딩 -->
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.11.8/lib/p5.js"></script>
+    <!-- ml5.js 라이브러리 -->
+    <script src="https://unpkg.com/ml5@0.6.0/dist/ml5.min.js"></script>
+    <!-- 본인 스케치 로딩 -->
+    <script src="./sketches/example.js" defer></script>
+
+    <!-- ∧○○○○ [수정 필수] ○○○○∧ -->
+  </head>
+  <body>
+    <main id="main">
+      <!-- ∨○○○○ [수정 필수] ○○○○∨ -->
+      <!-- 전체화면 여부 선택 -->
+      <section
+        id="section-canvas"
+        class="section section--canvas canvas"
+        data-full-width="false"
+      >
+        <!-- ∧○○○○ [수정 필수] ○○○○∧ -->
+        <div class="container canvas__container">
+          <div id="canvas-container"></div>
+        </div>
+      </section>
+      <section id="section-control" class="section section--control control">
+        <div class="container control__container control__container">
+          <div class="control__label">
+            <div class="control__label__title title"></div>
+            <div class="control__label__author author"></div>
+          </div>
+          <div class="control__paging">
+            <button
+              id="button-prev"
+              class="icon-button control__button control__button--prev"
+              data-icon="arrow_back_ios_new"
+              aria-label="to previous"
+            ></button>
+            <button
+              id="button-next"
+              class="icon-button control__button control__button--next"
+              data-icon="arrow_forward_ios"
+              aria-label="to next"
+            ></button>
+            <button
+              id="button-list"
+              class="icon-button control__button control__button--list"
+              data-icon="grid_view"
+              aria-label="to list"
+            ></button>
+          </div>
+          <div class="control__scroll">
+            <button
+              id="button-scroll"
+              class="icon-button control__button control__button--scroll"
+              data-icon="arrow_drop_down"
+              aria-label="toggle description"
+              data-toward="down"
+            ></button>
+          </div>
+        </div>
+      </section>
+      <section
+        id="section-information"
+        class="section section--information information"
+      >
+        <div class="container information__container">
+          <div class="information__label">
+            <h1 class="information__label__title title"></h1>
+            <h2 class="information__label__author author"></h2>
+          </div>
+          <div class="information__description">
+            <!-- ∨○○○○ [수정 필수] ○○○○∨ -->
+            <!-- 작품 설명 -->
+            <p>
+              이 작품은 웹캠과 손 트래킹(ml5.js Handpose), p5.js 픽셀 조작을
+              활용해 수증기로 흐릿해진 거울을 손으로 닦는 경험을 디지털로 구현한
+              인터랙티브 미디어입니다.
+            </p>
+            <p>
+              사용자가 카메라 앞에서 손을 움직이면, 거울 위의 수증기 레이어가
+              손끝을 따라 닦여 나가고, 그 아래에 숨겨져 있던 선명한 화면이
+              천천히 드러납니다. 닦인 자리에는 물방울이 맺혀 중력에 이끌려
+              아래로 천천히 떨어지며, 시간이 지나면 거울은 다시금 서서히
+              흐려집니다.
+            </p>
+            <p>
+              이 과정은 실시간 영상처리와 손 인식, 파티클 시스템 등 미디어아트
+              프로그래밍 기법을 활용하여 자연현상(수증기, 닦기, 물방울)을 컴퓨터
+              그래픽으로 재현한 것입니다. 좌우반전된 웹캠 영상 위에 손가락의
+              위치를 실시간으로 추적하고, 픽셀 단위로 뿌연 레이어를 닦아내며, 각
+              닦은 자리마다 물방울 파티클이 생성되어 중력 효과와 함께 천천히
+              사라집니다.
+            </p>
+            <p>
+              사용자는 손끝 움직임에 따라 흐릿함과 선명함, 그리고 물방울의
+              움직임을 직접 체험할 수 있습니다. 닦인 자리가 다시 흐려지고,
+              물방울이 아래로 떨어지는 반복적인 변화는 디지털 화면 안에서 현실의
+              물성과 시간성을 새롭게 경험하게 합니다.
+            </p>
+            <p>
+              흐린 거울을 닦아내며 잠깐 드러나는 자신의 모습과 그 위에 맺히는
+              작은 물방울들은 일상의 한순간, 혹은 기억의 조각처럼 잠시
+              나타났다가 이내 사라지는 순간을 떠올리게 합니다. 닦아낸 자리의
+              선명함, 그리고 이내 흘러내리는 물방울은 우리의 기억과 감정도
+              결국은 잠시 머물다 지나감을 조용히 상기시킵니다.
+            </p>
+            <p>
+              이 작품은 짧은 접촉과 흔적, 그리고 사라짐 속에서 우리가 반복적으로
+              마주하는 일상의 순간과 그 안에 깃든 감정, 기억, 그리고 시간의
+              흐름을 디지털 미디어를 통해 다시 바라보게 합니다.
+            </p>
+            <!-- ∧○○○○ [수정 필수] ○○○○∧ -->
+          </div>
+          <div class="information__reference">
+            <div class="information__reference__wrap">
+              <div class="information__reference__title">참고자료</div>
+              <ol></ol>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
