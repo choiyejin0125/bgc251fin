@@ -76,7 +76,7 @@ function draw() {
       // 손가락 자국 닦기
       eraseCircle(fogLayer, flippedX, screenPos.y, 18, 0.7, 60);
 
-      // 물방울 떨어뜨리기 (홀수 번호만)
+      // 물방울 떨어뜨리기 (홀수번호만)
       if (i % 2 === 1 && frameCount % 5 === 0 && waterDrops.length < 5) {
         waterDrops.push({
           x: flippedX,
